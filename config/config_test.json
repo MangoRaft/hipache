@@ -1,14 +1,25 @@
 {
-    "server": {
-        "debug": true,
-        "accessLog": "/tmp/proxy2_test_access.log",
-        "port": 1080,
-        "workers": 2,
-        "maxSockets": 100,
-        "deadBackendTTL": 30,
-        "tcpTimeout": 5,
-        "retryOnError": 0,
-        "deadBackendOn500": true,
-        "httpKeepAlive": false
-    }
+	"server": {
+		"debug": true,
+		"accessLog": "/tmp/proxy2_test_access.log",
+		"port": 1080,
+		"workers": 2,
+		"maxSockets": 100,
+		"deadBackendTTL": 30,
+		"tcpTimeout": 5,
+		"retryOnError": 0,
+		"deadBackendOn500": true,
+		"httpKeepAlive": false
+	},
+	"logging": {
+		"web": {
+			"port": 5000,
+			"host": "127.0.0.1"
+		},
+		"udp": {
+			"port": 5001,
+			"host": "127.0.0.1"
+		},
+		"session": "session.47f69903-f823-8452-70bb-a2a0a43beb7b"
+	}
 }
