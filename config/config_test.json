@@ -23,7 +23,8 @@
 		"session": "session.47f69903-f823-8452-70bb-a2a0a43beb7b"
 	},
 	"metrics": {
-		"port": 2003,
-		"host": "127.0.0.1"
+		"port": 8125,
+		"host": "127.0.0.1",
+		"session": "metrics.47f69903"
 	}
 }
