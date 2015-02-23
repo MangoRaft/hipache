@@ -25,6 +25,7 @@
     "http-proxy": "1.0.2",
     "lru-cache": "2.5.x",
     "minimist": "0.0.8",
+    "node-statsd": "^0.1.1",
     "raft-logger-redis": "^0.2.7",
     "redis": "0.10.x"
   },
