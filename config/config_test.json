@@ -14,17 +14,17 @@
 	"logging": {
 		"web": {
 			"port": 5000,
-			"host": "127.0.0.1"
+			"host": "104.236.23.15"
 		},
 		"udp": {
 			"port": 5001,
-			"host": "127.0.0.1"
+			"host": "104.236.23.15"
 		},
-		"session": "session.47f69903-f823-8452-70bb-a2a0a43beb7b"
+		"session": "logs.47f69903"
 	},
 	"metrics": {
 		"port": 8125,
-		"host": "127.0.0.1",
+		"host": "69.195.142.174",
 		"session": "metrics.47f69903"
 	}
 }
