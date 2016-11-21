@@ -36,22 +36,38 @@ From the shell:
 
 Basic Hipache configuration is described in a json file. For example:
 
-    {
-        "server": {
-            "accessLog": "/var/log/hipache_access.log",
-            "port": 80,
-            "workers": 5,
-            "maxSockets": 100,
-            "deadBackendTTL": 30,
-            "address": ["127.0.0.1", "::1"],
-            "https": {
-                "port": 443,
-                "key": "/etc/ssl/ssl.key",
-                "cert": "/etc/ssl/ssl.crt"
-            }
-        },
-        "driver": "redis://:password@127.0.0.1:6379/0"
-    }
+{
+	"server": {
+		"debug": true,
+		"accessLog": "/hipache/access.log",
+		"port": 80,
+		"address": ["0.0.0.0"],
+		"workers": 2,
+		"maxSockets": 100,
+		"deadBackendTTL": 30,
+		"tcpTimeout": 60,
+		"retryOnError": 1,
+		"deadBackendOn500": true,
+		"httpKeepAlive": false
+	},
+	"driver": "redis://:",
+	"logging": {
+		"web": {
+			"port": 5000,
+			"host": "127.0.0.1"
+		},
+		"udp": {
+			"port": 5001,
+			"host": "127.0.0.1"
+		},
+		"session": "hipache"
+	},
+	"metrics": {
+		"port": 8125,
+		"host": "127.0.0.1",
+		"session": "hipache"
+	}
+}
 
 * __server.accessLog__: location of the Access logs, the format is the same as
 nginx

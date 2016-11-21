@@ -1,17 +1,18 @@
 {
 	"server": {
 		"debug": true,
-		"accessLog": "/tmp/proxy2_test_access.log",
-		"port": 1080,
-		"address": "0.0.0.0",
+		"accessLog": "/hipache/access.log",
+		"port": 80,
+		"address": ["0.0.0.0"],
 		"workers": 2,
 		"maxSockets": 100,
 		"deadBackendTTL": 30,
-		"tcpTimeout": 5,
-		"retryOnError": 0,
+		"tcpTimeout": 60,
+		"retryOnError": 1,
 		"deadBackendOn500": true,
 		"httpKeepAlive": false
 	},
+	"driver": "redis://:",
 	"logging": {
 		"web": {
 			"port": 5000,
@@ -21,11 +22,11 @@
 			"port": 5001,
 			"host": "127.0.0.1"
 		},
-		"session": "logs.47f69903"
+		"session": "hipache"
 	},
 	"metrics": {
 		"port": 8125,
 		"host": "127.0.0.1",
-		"session": "metrics.47f69903"
+		"session": "hipache"
 	}
 }
