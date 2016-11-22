@@ -1,56 +1,47 @@
 {
-  "name": "hipache-raft",
-  "version": "0.4.1",
-  "description": "Complete high-scaled reverse-proxy solution",
-  "keywords": [
-    "reverse",
-    "proxy",
-    "http",
-    "http-proxy"
-  ],
-  "homepage": "https://github.com/dotcloud/hipache",
-  "bugs": {
-    "url": "https://github.com/dotcloud/hipache/issues",
-    "email": "sam.alba@gmail.com"
-  },
-  "license": "MIT",
-  "main": "./bin/hipache",
-  "bin": {
-    "hipache": "./bin/hipache"
-  },
-  "directories": {
-    "lib": "./lib"
-  },
-  "dependencies": {
-    "http-proxy-1.0.2": "*",
-    "lru-cache": "2.5.x",
-    "minimist": "0.0.8",
-    "node-statsd": "^0.1.1",
-    "raft-logger-redis": "0.2.x",
-    "redis": "2.4.2"
-  },
-  "scripts": {
-    "start": "./bin/hipache",
-    "test": "istanbul test _mocha --report html -- test/**/*.js --reporter spec",
-    "coveralls": "istanbul cover _mocha --report lcovonly -- test/**/*.js -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
-    "hint": "gulp hint"
-  },
-  "engines": {
-    "node": ">=0.10.0",
-    "npm": ">=1.0.0"
-  },
-  "engineStrict": true,
-  "author": {
-    "name": "Sam Alba",
-    "email": "sam.alba@gmail.com",
-    "url": "http://www.dotcloud.com/"
-  },
-  "maintainer": [
-    "Sam Alba <sam.alba@gmail.com>",
-    "Olivier Gambier <viapanda@gmail.com>"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/dotcloud/hipache.git"
-  }
+	"name": "hipache-raft",
+	"version": "0.4.1",
+	"description": "Complete high-scaled reverse-proxy solution",
+	"keywords": ["reverse", "proxy", "http", "http-proxy"],
+	"homepage": "https://github.com/dotcloud/hipache",
+	"bugs": {
+		"url": "https://github.com/dotcloud/hipache/issues",
+		"email": "sam.alba@gmail.com"
+	},
+	"license": "MIT",
+	"main": "./bin/hipache",
+	"bin": {
+		"hipache": "./bin/hipache"
+	},
+	"directories": {
+		"lib": "./lib"
+	},
+	"dependencies": {
+		"http-proxy": "1.15.2",
+		"redis": "~2.6.3",
+		"lru-cache": "~4.0.1",
+		"minimist": "1.2.0",
+		"raft-logger-redis": "0.2.x"
+	},
+	"scripts": {
+		"start": "./bin/hipache",
+		"test": "istanbul test _mocha --report html -- test/**/*.js --reporter spec",
+		"coveralls": "istanbul cover _mocha --report lcovonly -- test/**/*.js -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
+		"hint": "gulp hint"
+	},
+	"engines": {
+		"node": ">=0.10.0",
+		"npm": ">=1.0.0"
+	},
+	"engineStrict": true,
+	"author": {
+		"name": "Sam Alba",
+		"email": "sam.alba@gmail.com",
+		"url": "http://www.dotcloud.com/"
+	},
+	"maintainer": ["Sam Alba <sam.alba@gmail.com>", "Olivier Gambier <viapanda@gmail.com>"],
+	"repository": {
+		"type": "git",
+		"url": "http://github.com/dotcloud/hipache.git"
+	}
 }
