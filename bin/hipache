@@ -48,7 +48,6 @@ config.driver=[config.driver]
 
 }
 
-
 if (cluster.isMaster) {
     // Run the master
     var m = master(config);
