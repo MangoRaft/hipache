@@ -17,7 +17,7 @@
 		"lib": "./lib"
 	},
 	"dependencies": {
-		"http-proxy": "1.15.2",
+		"http-proxy": "1.16.2",
 		"redis": "~2.6.3",
 		"lru-cache": "~4.0.1",
 		"minimist": "1.2.0",
