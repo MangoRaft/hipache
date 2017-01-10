@@ -5,8 +5,8 @@
 	"keywords": ["reverse", "proxy", "http", "http-proxy"],
 	"homepage": "https://github.com/dotcloud/hipache",
 	"bugs": {
-		"url": "https://github.com/dotcloud/hipache/issues",
-		"email": "sam.alba@gmail.com"
+		"url": "https://github.com/mangoraft/hipache/issues",
+		"email": "mangoraft@gmail.com"
 	},
 	"license": "MIT",
 	"main": "./bin/hipache",
@@ -34,14 +34,9 @@
 		"npm": ">=1.0.0"
 	},
 	"engineStrict": true,
-	"author": {
-		"name": "Sam Alba",
-		"email": "sam.alba@gmail.com",
-		"url": "http://www.dotcloud.com/"
-	},
-	"maintainer": ["Sam Alba <sam.alba@gmail.com>", "Olivier Gambier <viapanda@gmail.com>"],
+	"maintainer": ["Tim D <mangoraft@gmail.com>"],
 	"repository": {
 		"type": "git",
-		"url": "http://github.com/dotcloud/hipache.git"
+		"url": "http://github.com/mangoraft/hipache.git"
 	}
 }
