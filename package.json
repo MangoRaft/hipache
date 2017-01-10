@@ -1,6 +1,6 @@
 {
 	"name": "hipache-raft",
-	"version": "0.4.1",
+	"version": "0.4.2",
 	"description": "Complete high-scaled reverse-proxy solution",
 	"keywords": ["reverse", "proxy", "http", "http-proxy"],
 	"homepage": "https://github.com/dotcloud/hipache",
