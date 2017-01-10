@@ -1,9 +1,6 @@
 Hipache: a distributed HTTP and websocket proxy
 ===============================================
 
-[![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url]  [![Dependency Status][depstat-image]][depstat-url] [![Coverage Status][coveralls-image]][coveralls-url] [![Code Climate][codeclimate-image]][codeclimate-url]
-[![Stories in Ready][waffle-image]][waffle-url]
-
 What is it?
 -----------
 
@@ -13,12 +10,17 @@ dynamic topology where backends are added and removed several times per second.
 It is particularly well-suited for PaaS (platform-as-a-service) and other
 environments that are both business-critical and multi-tenant.
 
-Hipache was originally developed at [dotCloud](http://www.dotcloud.com), a
-popular platform-as-a-service, to replace its first-generation routing layer
-based on a heavily instrumented nginx deployment. It currently serves
-production traffic for tens of thousands of applications hosted on dotCloud.
-Hipache is based on the node-http-proxy library.
+Hipache was originally developed at [dotCloud](http://www.dotcloud.com)
 
+## Features
+
+* Load-Balancing
+* Dead Backend Detection
+* Dynamic Configuration
+* WebSocket
+* TLS
+* Distributed logging
+* Integrated statsd
 
 Run it!
 -------
@@ -27,7 +29,7 @@ Run it!
 
 From the shell:
 
-    $ npm install hipache -g
+    $ npm install hipacheraft -g
 
 *The '-g' option will make the 'hipache' bin-script available system-wide (usually linked from '/usr/local/bin')*
 
@@ -35,42 +37,44 @@ From the shell:
 ### 2. Configuration (config.json)
 
 Basic Hipache configuration is described in a json file. For example:
-
+```json
 {
-	"server": {
-		"debug": true,
-		"accessLog": "/hipache/access.log",
-		"port": 80,
-		"address": ["0.0.0.0"],
-		"workers": 2,
-		"maxSockets": 100,
-		"deadBackendTTL": 30,
-		"tcpTimeout": 60,
-		"retryOnError": 1,
-		"deadBackendOn500": true,
-		"httpKeepAlive": false
-	},
-	"driver": "redis://:",
-	"logging": {
-		"web": {
-			"port": 5000,
-			"host": "127.0.0.1"
-		},
-		"udp": {
-			"port": 5001,
-			"host": "127.0.0.1"
-		},
-		"session": "hipache"
-	},
-	"metrics": {
-		"port": 8125,
-		"host": "127.0.0.1",
-		"session": "hipache"
-	}
+    "server": {
+        "debug":true,
+        "port": 80,
+        "workers": 2,
+        "maxSockets": 500,
+        "deadBackendTTL": 30,
+        "tcpTimeout": 900,
+        "retryOnError": 1,
+        "deadBackendOn500": true,
+        "httpKeepAlive": true,
+        "https": {
+            "key": "/hipache/privkey.pem",
+            "cert": "/hipache/fullchain.pem",
+            "port": 443
+        }
+    },
+    "driver": "redis://:foobar@127.0.0.1:6379",
+    "logging": {
+        "web": {
+            "port": 5000,
+            "host": "127.0.0.1"
+        },
+        "udp": {
+            "port": 5001,
+            "host": "127.0.0.1"
+        },
+        "session": "ea685f42-88dd-4ee5-b3a3-e698bd92d7fc"
+    },
+    "metrics": {
+        "port": 8125,
+        "host": "127.0.0.1",
+        "session": "ea685f42-88dd-4ee5-b3a3-e698bd92d7fc"
+    }
 }
+```
 
-* __server.accessLog__: location of the Access logs, the format is the same as
-nginx
 * __server.port__: Port to listen to (HTTP)
 * __server.workers__: Number of workers to be spawned (specify at least 1, the
 master process does not serve any request)
@@ -78,9 +82,15 @@ master process does not serve any request)
 each backend (per worker)
 * __server.deadBackendTTL__: The number of seconds a backend is flagged as
 `dead' before retrying to proxy another request to it (doesn't apply if you are using a third-party health checker)
-* __server.address__: IPv4 and IPv6 Addresses listening (HTTP and HTTPS)
 * __server.https__: SSL configuration (omit this section to disable HTTPS)
-* __driver__: Redis url (you can omit this entirely to use the local redis on the default port). If you want a master/slave Redis, specify a second url for the master, eg: `driver: ["redis://slave:port", "redis://master:port"]`. More generally, the driver syntax is: `redis://:password@host:port/database#prefix` - all parameter are optional, hence just `redis:` is a valid driver uri. More infos about drivers in [lib/drivers](https://github.com/dotcloud/hipache/tree/master/lib/drivers).
+* __driver__: Redis url (you can omit this entirely to use the local redis on the default port).
+
+####Logging
+Take not that logging is done though `Logger` that can be found at https://github.com/MangoRaft/Logger
+Using Logger allows for distributed logging from multiple balances to a single location.
+
+####Statsd
+Metrics are pushed to a statsd instance. Find out more at https://github.com/etsy/statsd
 
 ### 3. Spawning
 
@@ -96,18 +106,6 @@ If you want to use a specific configuration file:
 
     $ hipache --config path/to/someConfig.json
 
-__Managing multiple configuration files:__
-
-The default configuration file is `config/config.json`. It's possible to have
-different configuration files named `config_<suffix>.json`, where the suffix
-is the value of an environment variable named `SETTINGS_FLAVOR`.
-
-For instance, here is how to spawn the server with the `config_test.json`
-configuration file in order to run the tests.
-
-    $ SETTINGS_FLAVOR=test hipache
-
-
 ### 4. Configuring a vhost (redis)
 
 All vhost configuration is managed through Redis. This makes it possible to
@@ -121,7 +119,7 @@ Different configuration adapters will follow, but for the moment you have to
 provision the Redis manually.
 
 Let's take an example, I want to proxify requests to 2 backends for the
-hostname www.dotcloud.com. The 2 backends IP are 192.168.0.42 and 192.168.0.43
+hostname www.mangoraft.com. The 2 backends IP are 192.168.0.42 and 192.168.0.43
 and they serve the HTTP traffic on the port 80.
 
 `redis-cli` is the standard client tool to talk to Redis from the terminal.
@@ -129,25 +127,42 @@ and they serve the HTTP traffic on the port 80.
 Here are the steps I will follow:
 
 1. __Create__ the frontend and associate an identifier
-
-        $ redis-cli rpush frontend:www.dotcloud.com mywebsite
-        (integer) 1
-
+```
+$ redis-cli rpush frontend:www.mangoraft.com mywebsite
+(integer) 1
+$ redis-cli rpush frontend:www.mangoraft.com url-metric-session
+(integer) 2
+$ redis-cli rpush frontend:www.mangoraft.com url-log-session
+(integer) 3
+```
 The frontend identifer is `mywebsite`, it could be anything.
 
 2. __Associate__ the 2 backends
-
-        $ redis-cli rpush frontend:www.dotcloud.com http://192.168.0.42:80
-        (integer) 2
-        $ redis-cli rpush frontend:www.dotcloud.com http://192.168.0.43:80
-        (integer) 3
-
+```
+$ redis-cli rpush frontend:www.mangoraft.com http://192.168.0.42:80
+(integer) 4
+$ redis-cli rpush frontend:www.mangoraft.com http://192.168.0.43:80
+(integer) 5
+```
 3. __Review__ the configuration
+```
+$ redis-cli lrange frontend:www.mangoraft.com 0 -1
+1) "mywebsite"
+2) "url-metric-session"
+3) "url-log-session"
+4) "http://192.168.0.42:80"
+5) "http://192.168.0.43:80"
+```
 
-        $ redis-cli lrange frontend:www.dotcloud.com 0 -1
-        1) "mywebsite"
-        2) "http://192.168.0.42:80"
-        3) "http://192.168.0.43:80"
+### TLS Configuration using redis (optional)
+
+```
+$ redis-cli -x hmset tls:www.mangoraft.com certificate < server.crt
+$ redis-cli -x hmset tls:www.mangoraft.com key < server.key
+
+$ redis-cli -x hmset tls:*.mangoraft.com certificate < wildcard.crt
+$ redis-cli -x hmset tls:*.mangoraft.com key < wildcard.key
+```
 
 While the server is running, any of these steps can be re-run without messing
 up with the traffic.
@@ -241,39 +256,3 @@ E.g., instead (or in addition to) www.example.tld, you can insert
 *.example.tld. Hipache will look for an exact match first, and then for a
 wildcard one up to 5 subdomains deep, e.g. foo.bar.baz.qux.quux will attempt to
 match itself first, then *.bar.baz.qux.quux, then *.baz.qux.quux, etc.
-
-### Active Health-Check
-
-Even though Hipache support passive health checks, it's also possible to run
-active health checks. This mechanism requires to run an external program (see third-party softwares below).
-
-
-Third party softwares of interest
--------------------
-
-Health-checkers:
-
- * [hipache-hchecker (golang)](https://github.com/samalba/hipache-hchecker)
- * [hipcheck (node.js)](https://github.com/runnable/hipcheck).
-
-A web interface to manage vhosts:
-
- * [airfield](https://github.com/emblica/airfield)
-
-[npm-url]: https://npmjs.org/package/hipache
-[npm-image]: https://badge.fury.io/js/hipache.png
-
-[travis-url]: http://travis-ci.org/dotcloud/hipache
-[travis-image]: https://secure.travis-ci.org/dotcloud/hipache.png?branch=master
-
-[coveralls-url]: https://coveralls.io/r/dotcloud/hipache
-[coveralls-image]: https://coveralls.io/repos/dotcloud/hipache/badge.png?branch=master
-
-[depstat-url]: https://david-dm.org/dotcloud/hipache
-[depstat-image]: https://david-dm.org/dotcloud/hipache.png
-
-[codeclimate-url]: https://codeclimate.com/github/dotcloud/hipache
-[codeclimate-image]: https://codeclimate.com/github/dotcloud/hipache.png
-
-[waffle-url]: https://waffle.io/dotcloud/hipache
-[waffle-image]: https://badge.waffle.io/dotcloud/hipache.png?label=in%20progress&title=Ready
