@@ -87,7 +87,7 @@ each backend (per worker)
 
 ####Logging
 Take not that logging is done though `Logger` that can be found at https://github.com/MangoRaft/Logger
-Using Logger allows for distributed logging from multiple balances to a single location.
+Using Logger allows for distributed logging from multiple balancers to a single location.
 
 ####Statsd
 Metrics are pushed to a statsd instance. Find out more at https://github.com/etsy/statsd
