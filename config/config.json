@@ -12,21 +12,21 @@
 		"deadBackendOn500": true,
 		"httpKeepAlive": false
 	},
-	"driver": "redis://:",
+	"driver": "redis://7ccsHwSbHBUqKVOJICthVgI0XJYYNDEN@:",
 	"logging": {
 		"web": {
-			"port": 5000,
-			"host": "127.0.0.1"
+			"port": 32768,
+			"host": "10.5.74.99"
 		},
 		"udp": {
-			"port": 5001,
-			"host": "127.0.0.1"
+			"port": 32768,
+			"host": "10.5.74.99"
 		},
 		"session": "hipache"
 	},
 	"metrics": {
-		"port": 8125,
-		"host": "127.0.0.1",
+		"port": 31768,
+		"host": "10.5.74.99",
 		"session": "hipache"
 	}
 }
